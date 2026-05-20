@@ -15,4 +15,6 @@ public class Restauracja
     public decimal Dlugosc_geo { get; init; }
 
     public decimal Szerokosc_geo { get; init; }
+
+    public string Zdjecie { get; init; }
 }

@@ -27,7 +27,9 @@ namespace Backend.Migrations.Restaurant
                     Nr_budynku = table.Column<int>(type: "int", nullable: false),
                     Nr_lokalu = table.Column<int>(type: "int", nullable: true),
                     Dlugosc_geo = table.Column<decimal>(type: "decimal(65,30)", nullable: false),
-                    Szerokosc_geo = table.Column<decimal>(type: "decimal(65,30)", nullable: false)
+                    Szerokosc_geo = table.Column<decimal>(type: "decimal(65,30)", nullable: false),
+                    Zdjecie = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
                 {

@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Backend.Migrations.Restaurant
 {
     [DbContext(typeof(RestaurantContext))]
-    [Migration("20260520123249_Restauracja")]
+    [Migration("20260520125253_Restauracja")]
     partial class Restauracja
     {
         /// <inheritdoc />
@@ -50,6 +50,10 @@ namespace Backend.Migrations.Restaurant
                         .HasColumnType("decimal(65,30)");
 
                     b.Property<string>("Ulica")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Zdjecie")
                         .IsRequired()
                         .HasColumnType("longtext");
 

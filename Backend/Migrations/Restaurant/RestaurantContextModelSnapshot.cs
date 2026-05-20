@@ -50,6 +50,10 @@ namespace Backend.Migrations.Restaurant
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<string>("Zdjecie")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
                     b.HasKey("Nr_restauracji");
 
                     b.ToTable("restauracje", (string)null);
