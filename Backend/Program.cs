@@ -13,6 +13,12 @@ builder.Services.AddDbContext<MenuContext>(options =>
         ServerVersion.AutoDetect(connectionString)
     ));
 
+builder.Services.AddDbContext<RestaurantContext>(options =>
+    options.UseMySql(
+        connectionString,
+        ServerVersion.AutoDetect(connectionString)
+    ));
+
 builder.Services.AddCors(options => {
     options.AddDefaultPolicy(policy => {
         policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
@@ -20,6 +26,7 @@ builder.Services.AddCors(options => {
 });
 
 builder.Services.AddScoped<MenuService>();
+builder.Services.AddScoped<RestaurantService>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -33,9 +40,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseCors();
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
-app.UseCors();
 
 app.Run();
