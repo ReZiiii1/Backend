@@ -7,17 +7,9 @@ var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("MySql")
     ?? throw new InvalidOperationException("Brak połączenia z bazą MySql.");
 
-builder.Services.AddDbContext<MenuContext>(options =>
-    options.UseMySql(
-        connectionString,
-        ServerVersion.AutoDetect(connectionString)
-    ));
-
-builder.Services.AddDbContext<RestaurantContext>(options =>
-    options.UseMySql(
-        connectionString,
-        ServerVersion.AutoDetect(connectionString)
-    ));
+builder.Services.AddDbContext<ManticoreContext>(options =>
+    options.UseMySql(builder.Configuration.GetConnectionString("MySql"),
+    ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("MySql"))));
 
 builder.Services.AddCors(options => {
     options.AddDefaultPolicy(policy => {

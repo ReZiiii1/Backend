@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Backend.Services;
 
-public class RestaurantService(RestaurantContext context)
+public class RestaurantService(ManticoreContext context)
 {
     public async Task<IReadOnlyList<Restauracja>> GetRestauracjeAsync(CancellationToken cancellationToken = default)
     {

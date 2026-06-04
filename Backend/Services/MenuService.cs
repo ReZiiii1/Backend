@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Backend.Services;
 
-public class MenuService(MenuContext context)
+public class MenuService(ManticoreContext context)
 {
     public async Task<IReadOnlyList<Produkt>> GetProduktyAsync(CancellationToken cancellationToken = default)
     {
