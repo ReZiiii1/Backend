@@ -19,6 +19,7 @@ builder.Services.AddCors(options => {
 
 builder.Services.AddScoped<MenuService>();
 builder.Services.AddScoped<RestaurantService>();
+builder.Services.AddScoped<OrderService>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

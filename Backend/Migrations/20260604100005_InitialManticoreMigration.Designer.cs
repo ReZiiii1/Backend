@@ -4,6 +4,7 @@ using Backend.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Backend.Migrations
 {
     [DbContext(typeof(ManticoreContext))]
-    partial class ManticoreContextModelSnapshot : ModelSnapshot
+    [Migration("20260604100005_InitialManticoreMigration")]
+    partial class InitialManticoreMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,60 +24,6 @@ namespace Backend.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
-
-            modelBuilder.Entity("Backend.Models.Order", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("OrderDate")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<decimal>("TotalPrice")
-                        .HasColumnType("decimal(65,30)");
-
-                    b.Property<string>("UserEmail")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Orders");
-                });
-
-            modelBuilder.Entity("Backend.Models.OrderItem", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("OrderId")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(65,30)");
-
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ProductName")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("OrderId");
-
-                    b.ToTable("OrderItems");
-                });
 
             modelBuilder.Entity("Backend.Models.Produkt", b =>
                 {
@@ -168,22 +117,6 @@ namespace Backend.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("users", (string)null);
-                });
-
-            modelBuilder.Entity("Backend.Models.OrderItem", b =>
-                {
-                    b.HasOne("Backend.Models.Order", "Order")
-                        .WithMany("OrderItems")
-                        .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Order");
-                });
-
-            modelBuilder.Entity("Backend.Models.Order", b =>
-                {
-                    b.Navigation("OrderItems");
                 });
 #pragma warning restore 612, 618
         }

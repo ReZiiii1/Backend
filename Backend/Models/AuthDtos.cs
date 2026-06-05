@@ -1,4 +1,4 @@
-﻿namespace YourProjectNamespace.Models
+﻿namespace Backend.Models
 {
     public class RegisterDto
     {
