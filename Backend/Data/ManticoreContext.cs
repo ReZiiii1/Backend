@@ -1,4 +1,4 @@
-﻿using Backend.Models;
+using Backend.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace Backend.Data;
@@ -8,8 +8,9 @@ public class ManticoreContext(DbContextOptions<ManticoreContext> options) : DbCo
     public DbSet<Restauracja> Restauracje { get; set; } = null!;
     public DbSet<Produkt> Produkty { get; set; } = null!;
     public DbSet<User> Users { get; set; } = null!;
-    public DbSet<Order> Orders { get; set; }=null!;
-    public DbSet<OrderItem> OrderItems { get; set; }=null!;
+    public DbSet<Order> Orders { get; set; } = null!;
+    public DbSet<OrderItem> OrderItems { get; set; } = null!;
+    public DbSet<Promotion> Promocje { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -22,5 +23,8 @@ public class ManticoreContext(DbContextOptions<ManticoreContext> options) : DbCo
 
         modelBuilder.Entity<User>().ToTable("users");
         modelBuilder.Entity<User>().HasKey(u => u.Id);
+
+        modelBuilder.Entity<Promotion>().ToTable("promocje");
+        modelBuilder.Entity<Promotion>().HasKey(p => p.Id);
     }
 }

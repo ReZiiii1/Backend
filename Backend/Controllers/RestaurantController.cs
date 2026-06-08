@@ -1,4 +1,4 @@
-﻿using Backend.Models;
+using Backend.Models;
 using Backend.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -6,12 +6,19 @@ namespace Backend.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class RestaurantController(RestaurantService RestaurantService) : ControllerBase
+public class RestaurantController(RestaurantService restaurantService) : ControllerBase
 {
     [HttpGet]
     public async Task<ActionResult<IReadOnlyList<Restauracja>>> Get()
     {
-        var Restauracje = await RestaurantService.GetRestauracjeAsync();
-        return Ok(Restauracje);
+        try
+        {
+            var restauracje = await restaurantService.GetRestauracjeAsync();
+            return Ok(restauracje);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { message = "Błąd podczas pobierania restauracji.", error = ex.Message });
+        }
     }
 }

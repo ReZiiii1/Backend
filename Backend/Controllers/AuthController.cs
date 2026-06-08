@@ -1,58 +1,75 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Backend.Data;
 using Backend.Models;
+using Backend.Services;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
-namespace Backend.Controllers
+namespace Backend.Controllers;
+
+[Route("api/[controller]")]
+[ApiController]
+public class AuthController(
+    ManticoreContext context,
+    JwtService jwtService) : ControllerBase
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class AuthController : ControllerBase
+    [HttpPost("register")]
+    public async Task<IActionResult> Register([FromBody] RegisterDto request)
     {
-        private readonly ManticoreContext _context;
-        public AuthController(ManticoreContext context) { _context = context; }
-
-        [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] RegisterDto request)
+        try
         {
-            if (await _context.Users.AnyAsync(u => u.Email == request.Email))
-            {
-                return BadRequest("Użytkownik o tym adresie e-mail już istnieje!");
-            }
-            string passwordHash = BCrypt.Net.BCrypt.HashPassword(request.Password);
+            if (string.IsNullOrWhiteSpace(request.Email) || string.IsNullOrWhiteSpace(request.Password))
+                return BadRequest(new { message = "E-mail i hasło są wymagane." });
+
+            if (await context.Users.AnyAsync(u => u.Email == request.Email))
+                return BadRequest(new { message = "Użytkownik o tym adresie e-mail już istnieje!" });
 
             var newUser = new User
             {
                 Username = request.Username,
                 Email = request.Email,
-                PasswordHash = passwordHash
+                PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.Password)
             };
 
-            _context.Users.Add(newUser);
-            await _context.SaveChangesAsync();
+            context.Users.Add(newUser);
+            await context.SaveChangesAsync();
 
             return Ok(new { message = "Rejestracja pomyślna!" });
         }
-
-        [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginDto request)
+        catch (Exception ex)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == request.Email);
+            return StatusCode(500, new { message = "Błąd podczas rejestracji.", error = ex.Message });
+        }
+    }
+
+    [HttpPost("login")]
+    public async Task<IActionResult> Login([FromBody] LoginDto request)
+    {
+        try
+        {
+            if (string.IsNullOrWhiteSpace(request.Email) || string.IsNullOrWhiteSpace(request.Password))
+                return BadRequest(new { message = "E-mail i hasło są wymagane." });
+
+            var user = await context.Users.FirstOrDefaultAsync(u => u.Email == request.Email);
 
             if (user == null)
-            {
-                return BadRequest("Nie znaleziono użytkownika o takim adresie e-mail.");
-            }
+                return BadRequest(new { message = "Nie znaleziono użytkownika o takim adresie e-mail." });
+
             if (!BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
-            {
-                return BadRequest("Błędne hasło!");
-            }
+                return BadRequest(new { message = "Błędne hasło!" });
+
+            var token = jwtService.GenerateToken(user);
+
             return Ok(new
             {
                 message = "Logowanie pomyślne!",
                 username = user.Username,
-                email = user.Email
+                email = user.Email,
+                token
             });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { message = "Błąd podczas logowania.", error = ex.Message });
         }
     }
 }
